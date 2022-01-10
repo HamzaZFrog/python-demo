@@ -80,7 +80,7 @@ jobs:
     env:
       DOCKER_REG: yann-swampup.dev.aws.devopsacc.team
       DOCKER_REPO: urs-docker
-      DOCKER_USER: ci_read
+      DOCKER_USER: hza-ci-read
       PROMOTE_REPO: urs-docker-release-local
     steps:
       - uses: actions/checkout@v2
