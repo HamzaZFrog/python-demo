@@ -14,7 +14,7 @@ on:
 env:
   JF_ARTIFACTORY_1: ${{ secrets.JF_ARTIFACTORY_SECRET_1 }}
   APP_VERSION: 2.0.0
-  GENERIC_REPO: urs-generic
+  GENERIC_REPO: ming-urs-generic
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -23,8 +23,8 @@ jobs:
     env:
       JFROG_BUILD_STATUS: PASS
       PYTHON_VERSION: 3.9
-      PYTHON_REPO: urs-python
-      PROMOTE_REPO: urs-generic-release-local
+      PYTHON_REPO: ming-urs-python
+      PROMOTE_REPO: ming-urs-generic-release-local
     steps:
       - uses: actions/checkout@v2
 
@@ -82,9 +82,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_REG: yann-swampup.dev.aws.devopsacc.team
-      DOCKER_REPO: urs-docker
+      DOCKER_REPO: ming-urs-docker
       DOCKER_USER: ci_read
-      PROMOTE_REPO: urs-docker-release-local
+      PROMOTE_REPO: ming-urs-docker-release-local
     steps:
       - uses: actions/checkout@v2
 
@@ -96,7 +96,7 @@ jobs:
           jfrog rt download \
             --props "version=${{ env.APP_VERSION }}" \
             --build $JFROG_CLI_BUILD_NAME/$JFROG_CLI_BUILD_NUMBER  \
-            --build-name=docker-$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER \
+            --build-name=ming-docker-$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER \
             ${{ env.GENERIC_REPO }} src/webapp_python.tar.gz
 
       - name: Docker Login
@@ -114,7 +114,7 @@ jobs:
           tags: ${{ env.DOCKER_REG }}/${{ env.DOCKER_REPO }}/gha-python-webapp:${{ env.APP_VERSION }}
 
       - name: Push Docker image
-        run: jfrog rt dp ${{ env.DOCKER_REG }}/${{ env.DOCKER_REPO }}/gha-python-webapp:${{ env.APP_VERSION }} ${{ env.DOCKER_REPO }} --build-name=docker-$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER
+        run: jfrog rt dp ${{ env.DOCKER_REG }}/${{ env.DOCKER_REPO }}/gha-python-webapp:${{ env.APP_VERSION }} ${{ env.DOCKER_REPO }} --build-name=ming-docker-$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER
 
       - name: Publish Docker Build Info
         run: |
@@ -123,7 +123,7 @@ jobs:
           jfrog rt bp docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
 
       - name: Scan Build 
-        run: jfrog rt bs --fail=false docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
+        run: jfrog rt bs --fail=false ming-docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
 
       - name: Promote Build 
-        run: jfrog rt bpr  --status "XRAY_SCAN_OK" --comment "promoted to the next level" docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER ${{ env.PROMOTE_REPO }}
+        run: jfrog rt bpr  --status "XRAY_SCAN_OK" --comment "promoted to the next level" ming-docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER ${{ env.PROMOTE_REPO }}
