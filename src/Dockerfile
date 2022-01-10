@@ -1,9 +1,9 @@
 ARG REGISTRY=yann-swampup.dev.aws.devopsacc.team
-ARG DOCKER_REPO=urs-docker
+ARG DOCKER_REPO=ming-urs-docker
 
 FROM $REGISTRY/$DOCKER_REPO/python:3.9.5-slim-buster
 
-ARG PYTHON_REPO=urs-python
+ARG PYTHON_REPO=ming-urs-python
 ARG RT_USER=ci_read
 ARG RT_TOKEN
 
