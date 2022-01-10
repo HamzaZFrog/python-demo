@@ -16,7 +16,7 @@ RUN mkdir -p /var/opt/webapp
 ADD webapp_python.tar.gz .
 RUN ls -l
 RUN pip config set global.index-url https://${RT_USER}:${RT_TOKEN}@${REGISTRY}/artifactory/api/pypi/${PYTHON_REPO}/simple && \
-    pip install -r requirements.txt --trusted-host ${REGISTRY}
+    pip install -r requirements.txt --trusted-host=${REGISTRY}
 
 EXPOSE 8080
 
