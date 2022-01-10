@@ -92,7 +92,6 @@ jobs:
         run: |
           jfrog rt download \
             --props "version=${{ env.APP_VERSION }}" \
-            --build $JFROG_CLI_BUILD_NAME/$JFROG_CLI_BUILD_NUMBER  \
             --build-name=ming-docker-$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER \
             ${{ env.GENERIC_REPO }} src/webapp_python.tar.gz
 
@@ -115,9 +114,9 @@ jobs:
 
       - name: Publish Docker Build Info
         run: |
-          jfrog rt bce docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
-          jfrog rt bag docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
-          jfrog rt bp docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
+          jfrog rt bce ming-docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
+          jfrog rt bag ming-docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
+          jfrog rt bp ming-docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
 
       - name: Promote Build 
         run: jfrog rt bpr  --status "XRAY_SCAN_OK" --comment "promoted to the next level" ming-docker-$JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER ${{ env.PROMOTE_REPO }}
